@@ -7,6 +7,12 @@ import { columns, DepartmentButtons } from '../../utils/DepartmentHelper'
 const DepartmentList = () => {
   const [departments, setDepartments] = useState([])
   const [depLoading, setDepLoading] = useState(false)
+
+  const onDepartDelete = async (id) => {
+    const data = departments.filter(dep => dep._id !== id) 
+    setDepartments(data)
+  }
+
   useEffect(() => {
     const fetchDepartments = async () => {
       setDepLoading(true)
@@ -23,7 +29,7 @@ const DepartmentList = () => {
                 _id: dep._id,
                 sno: sno++,
                 dep_name: dep.dep_name,
-                action: (<DepartmentButtons _id={dep._id} />)
+                action: (<DepartmentButtons _id={dep._id} onDepartDelete = {onDepartDelete}/>)
               }
             ))
             setDepartments(data)
