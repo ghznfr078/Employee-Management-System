@@ -24,13 +24,15 @@ const login = async (req, res) => {
             {expiresIn: '7d'}
         )
 
-        res.status(200).json({
+        
+        return res.status(200)
+        .json({
             success: true,
             token,
             user: {_id: user._id, name: user.name, role: user.role, email: user.email}
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: error.message
         })
