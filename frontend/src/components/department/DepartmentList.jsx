@@ -7,6 +7,7 @@ import { columns, DepartmentButtons } from '../../utils/DepartmentHelper'
 const DepartmentList = () => {
   const [departments, setDepartments] = useState([])
   const [depLoading, setDepLoading] = useState(false)
+  const [filteredDepartments, setFilteredDepartments] = useState([])
 
   const onDepartDelete = async (id) => {
     const data = departments.filter(dep => dep._id !== id) 
@@ -33,6 +34,7 @@ const DepartmentList = () => {
               }
             ))
             setDepartments(data)
+            setFilteredDepartments(data)
         }
       } catch (error) {
         if (error.response) {
@@ -46,6 +48,13 @@ const DepartmentList = () => {
     }
     fetchDepartments()
   }, [])
+
+  const filterDepartments = (e) => {
+    const records = departments.filter((dep) => 
+    dep.dep_name.toLowerCase().includes(e.target.value.toLowerCase()))
+    setFilteredDepartments(records)
+  }
+
   return (
     <>
     {depLoading ? <div>Loading ...</div> : 
@@ -54,13 +63,17 @@ const DepartmentList = () => {
         <h3 className='text-2xl font-bold'>Manage Departments</h3>
       </div>
       <div className='flex justify-between items-center'>
-        <input type="text" placeholder='Search By Dep Name' className='px-4 py-0.5 border'/>
+        <input type="text"
+        placeholder='Search By Dep Name'
+        onChange={filterDepartments}
+        className='px-4 py-0.5 border'/>
         <Link to="/admin-dashboard/add-department" className='px-4 py-1 bg-teal-600 rounded text-white'>Add New Department</Link>
       </div>
       <div className='mt-5'>
           <DataTable
             columns={columns}
-            data={departments}
+            data={filteredDepartments}
+            pagination
           />
       </div>
     </div>
