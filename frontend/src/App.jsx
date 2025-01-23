@@ -13,6 +13,7 @@ import EmployeeList from "./components/employee/EmployeeList";
 import AddEmployee from "./components/employee/AddEmployee";
 import ViewEmployee from "./components/employee/ViewEmployee";
 import EditEmployee from "./components/employee/EditEmployee";
+import AddSalary from "./components/salary/AddSalary";
 
 const App = () => {
   return (
@@ -59,6 +60,10 @@ const App = () => {
           <Route
             path="/admin-dashboard/employees/edit/:id"
             element={<EditEmployee />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/salary/add"
+            element={<AddSalary />}
           ></Route>
         </Route>
 
