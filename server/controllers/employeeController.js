@@ -1,6 +1,7 @@
 import path from "path"
 import { Employee } from "../models/employeeModel.js"
 import { User } from "../models/userModel.js"
+import {Department} from '../models/departModel.js'
 import bcrypt from 'bcrypt'
 import multer from 'multer'
 
@@ -65,7 +66,6 @@ const addEmployee = async (req, res) => {
         
     
         const savedEmployee = await newEmployee.save()
-        console.log(savedEmployee);
 
         return res.status(201).json({success: true, message: "employee created"})
     } catch (error) {
@@ -83,4 +83,52 @@ const getEmployees = async (req, res) => {
     }
 }
 
-export {addEmployee, upload, getEmployees}
+const getEmployee = async (req, res) => {
+    try {
+        const {id} = req.params
+        const employee = await Employee.findById(id).populate('userId', {password: 0}).populate('department')
+
+        return res.status(200).json({success: true, employee})
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "get employee Server error" });
+    }
+}
+
+const updateEmployee = async (req, res) => {
+    try {
+        const {id} = req.params
+        const {name, maritalStatus, designation, department, salary} = req.body
+
+        const employee = await Employee.findById(id)
+
+        if(!employee) {
+            return res.status(404).json({ success: false, error: "employee not found!" });
+        }
+
+        const user = await User.findById({_id: employee.userId})
+
+        if(!user) {
+            return res.status(404).json({ success: false, error: "user not found!" });
+        }
+
+        const updateUser = await User.findByIdAndUpdate({_id: employee.userId}, {name})
+
+        const updateEmployee = await Employee.findByIdAndUpdate(id, {
+            maritalStatus,
+            designation,
+            salary,
+            department
+        })
+
+        if(!updateEmployee || !updateUser) {
+            return res.status(500).json({ success: false, error: "document not found" });
+        }
+
+        return res.status(200).json({success: true, message: "employee updated!"})
+    } catch (error) {
+        return res.status(500).json({ success: false, error: "update employee Server error" });
+    }
+}
+ 
+
+export {addEmployee, upload, getEmployees, getEmployee, updateEmployee}
