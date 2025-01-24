@@ -3,6 +3,7 @@ import cors from 'cors'
 import authRouter from './routes/authRoutes.js'
 import departRouter from './routes/departmentRoutes.js'
 import employeeRouter from './routes/employeeRoutes.js'
+import salaryRouter from './routes/salaryRoutes.js'
 
 
 import connectToDb from './db/db.js'
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use('/api/auth', authRouter)
 app.use('/api/department', departRouter)
 app.use('/api/employee', employeeRouter)
+app.use('/api/salary', salaryRouter)
 
 connectToDb()
 
