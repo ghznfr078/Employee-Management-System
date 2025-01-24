@@ -7,17 +7,17 @@ const salarySchema = new Schema({
         required: true
     },
     basicSalary: {
-        type: 'number',
+        type: Number,
         required: true
     },
     allowances: {
-        type: 'number'
+        type: Number
     },
     deductions: {
-        type: 'number'
+        type: Number
     },
     netSalary: {
-        type: 'number'
+        type: Number
     },
     payDate: {
         type: Date,

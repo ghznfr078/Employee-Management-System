@@ -16,6 +16,8 @@ import EditEmployee from "./components/employee/EditEmployee";
 import AddSalary from "./components/salary/AddSalary";
 import ViewSalary from "./components/salary/ViewSalary";
 import Summary from "./components/employeeDashboard/Summary";
+import LeaveList from "./components/leave/LeaveList";
+import AddLeave from "./components/leave/AddLeave";
 
 const App = () => {
   return (
@@ -87,6 +89,14 @@ const App = () => {
           <Route
             path="/employee-dashboard/profile/:id"
             element={<ViewEmployee />}
+          ></Route>
+          <Route
+            path="/employee-dashboard/leaves"
+            element={<LeaveList />}
+          ></Route>
+          <Route
+            path="/employee-dashboard/leaves/add-leave"
+            element={<AddLeave />}
           ></Route>
         </Route>
       </Routes>
