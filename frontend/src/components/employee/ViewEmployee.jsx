@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 const ViewEmployee = () => {
   const { id } = useParams();
   const [employee, setEmployee] = useState(null);
-  console.log(id);
 
   useEffect(() => {
     const fetchEmployee = async () => {
