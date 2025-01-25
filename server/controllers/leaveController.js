@@ -23,12 +23,13 @@ const addLeave = async (req, res) => {
 const getLeave = async (req, res) => {
     const {id} = req.params
     try {
-        let leaves = await Leave.find({employeeId: id})
+        let leaves;
+        leaves = await Leave.find({employeeId: id})
 
-        if(!leaves) {
+        if(!leaves || leaves.length === 0) {
             const employee = await Employee.findOne({userId: id})
 
-             leave = await Leave.find({employeeId: employee._id})
+             leaves = await Leave.find({employeeId: employee._id})
         }
         
 

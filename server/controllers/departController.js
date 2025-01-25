@@ -28,7 +28,7 @@ const getDepartments = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ success: false, message: "get dpt Server error" });
     }
-}
+} 
 
 const getDepartment = async (req, res) => {
     try {
@@ -72,7 +72,9 @@ const deleteDepartment = async (req, res) => {
     try {
         const {id} = req.params
 
-        await Department.findByIdAndDelete(id)
+        const deletedep = await Department.findById(id)
+
+        await deletedep.deleteOne()
 
         return res.status(200).json({success: true})
 
