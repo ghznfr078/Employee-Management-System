@@ -5,7 +5,8 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const LeaveList = () => {
   const { user } = useAuth();
-  const [leaves, setLeaves] = useState([]);
+  const [leaves, setLeaves] = useState([]); // Default as empty array
+  const [error, setError] = useState(null); // For error handling
   let sno = 1;
 
   const fetchLeaves = async () => {
@@ -18,13 +19,16 @@ const LeaveList = () => {
           },
         }
       );
+      console.log(response.data.leave);
+
       if (response.data.success) {
-        setLeaves(response.data.leaves);
+        setLeaves(response.data.leave || []); // Ensure fallback to an empty array
+      } else {
+        throw new Error(response.data.message || "Failed to fetch leaves");
       }
-    } catch (error) {
-      if (error.response && !error.response.data.success) {
-        alert(error.message);
-      }
+    } catch (err) {
+      setError(err.message || "An error occurred");
+      setLeaves([]); // Set to empty array on error
     }
   };
 
@@ -33,25 +37,29 @@ const LeaveList = () => {
   }, []);
 
   return (
-    <>
-      <div className="p-6">
-        <div className="text-center">
-          <h3 className="text-2xl font-bold">Manage Leaves</h3>
-        </div>
-        <div className="flex justify-between items-center">
-          <input
-            type="text"
-            placeholder="Search By Employee ID"
-            className="px-4 py-0.5 border"
-          />
-          <Link
-            to="/employee-dashboard/leaves/add-leave"
-            className="px-4 py-1 bg-teal-600 rounded text-white"
-          >
-            Add New Leave
-          </Link>
-        </div>
+    <div className="p-6">
+      <div className="text-center">
+        <h3 className="text-2xl font-bold">Manage Leaves</h3>
+      </div>
+      <div className="flex justify-between items-center mb-4">
+        <input
+          type="text"
+          placeholder="Search By Employee ID"
+          className="px-4 py-2 border rounded"
+        />
+        <Link
+          to="/employee-dashboard/leaves/add-leave"
+          className="px-4 py-2 bg-teal-600 rounded text-white hover:bg-teal-700"
+        >
+          Add New Leave
+        </Link>
+      </div>
 
+      {error ? (
+        <div className="text-red-500 text-center">{error}</div>
+      ) : leaves.length === 0 ? (
+        <div className="text-gray-500 text-center">No leaves found.</div>
+      ) : (
         <table className="w-full text-sm text-left text-gray-500 mt-6">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 border border-gray-200">
             <tr>
@@ -67,7 +75,7 @@ const LeaveList = () => {
             {leaves.map((leave) => (
               <tr
                 key={leave._id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                className="bg-white border-b hover:bg-gray-50"
               >
                 <td className="px-6 py-3">{sno++}</td>
                 <td className="px-6 py-3">{leave.leaveType}</td>
@@ -77,15 +85,14 @@ const LeaveList = () => {
                 <td className="px-6 py-3">
                   {new Date(leave.endDate).toLocaleDateString()}
                 </td>
-                <td className="px-6 py-3">{leave.reason}</td>
-                <td className="px-6 py-3">{leave.netleave}</td>
+                <td className="px-6 py-3">{leave.reason || "N/A"}</td>
                 <td className="px-6 py-3">{leave.status}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 

@@ -19,6 +19,8 @@ import Summary from "./components/employeeDashboard/Summary";
 import LeaveList from "./components/leave/LeaveList";
 import AddLeave from "./components/leave/AddLeave";
 import Setting from "./components/employeeDashboard/Setting";
+import LeaveTable from "./components/leave/LeaveTable";
+import LeaveDetails from "./components/leave/LeaveDetails";
 
 const App = () => {
   return (
@@ -73,6 +75,14 @@ const App = () => {
           <Route
             path="/admin-dashboard/employee/salary/:id"
             element={<ViewSalary />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/leaves"
+            element={<LeaveTable />}
+          ></Route>
+          <Route
+            path="/admin-dashboard/leaves/:id"
+            element={<LeaveDetails />}
           ></Route>
         </Route>
 
