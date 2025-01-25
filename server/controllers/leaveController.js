@@ -23,11 +23,16 @@ const addLeave = async (req, res) => {
 const getLeave = async (req, res) => {
     const {id} = req.params
     try {
-        const employee = await Employee.findOne({userId: id})
+        let leaves = await Leave.find({employeeId: id})
 
-        const leave = await Leave.find({employeeId: employee._id})
+        if(!leaves) {
+            const employee = await Employee.findOne({userId: id})
 
-        return res.status(200).json({success: true, leave})
+             leave = await Leave.find({employeeId: employee._id})
+        }
+        
+
+        return res.status(200).json({success: true, leaves})
     } catch (error) {
         return res.status(500).json({success: false, error: "get leave server error"})
     }

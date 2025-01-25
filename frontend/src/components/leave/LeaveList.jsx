@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 const LeaveList = () => {
@@ -8,21 +8,21 @@ const LeaveList = () => {
   const [leaves, setLeaves] = useState([]); // Default as empty array
   const [error, setError] = useState(null); // For error handling
   let sno = 1;
+  const { id } = useParams();
 
   const fetchLeaves = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/leave/${user._id}`,
+        `http://localhost:3000/api/leave/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      console.log(response.data.leave);
 
       if (response.data.success) {
-        setLeaves(response.data.leave || []); // Ensure fallback to an empty array
+        setLeaves(response.data.leaves || []); // Ensure fallback to an empty array
       } else {
         throw new Error(response.data.message || "Failed to fetch leaves");
       }
@@ -47,12 +47,14 @@ const LeaveList = () => {
           placeholder="Search By Employee ID"
           className="px-4 py-2 border rounded"
         />
-        <Link
-          to="/employee-dashboard/leaves/add-leave"
-          className="px-4 py-2 bg-teal-600 rounded text-white hover:bg-teal-700"
-        >
-          Add New Leave
-        </Link>
+        {user.role === "employee" && (
+          <Link
+            to="/employee-dashboard/leaves/add-leave"
+            className="px-4 py-2 bg-teal-600 rounded text-white hover:bg-teal-700"
+          >
+            Add New Leave
+          </Link>
+        )}
       </div>
 
       {error ? (

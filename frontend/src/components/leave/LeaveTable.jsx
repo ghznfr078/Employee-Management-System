@@ -5,6 +5,7 @@ import axios from "axios";
 
 const LeaveTable = () => {
   const [leaves, setLeaves] = useState(null);
+  const [filteredLeaves, setFilteredLeaves] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,6 +32,7 @@ const LeaveTable = () => {
           action: <LeaveButtons Id={leave._id} />,
         }));
         setLeaves(data);
+        setFilteredLeaves(data);
       }
     } catch (error) {
       setError(
@@ -44,6 +46,20 @@ const LeaveTable = () => {
   useEffect(() => {
     fetchLeaves();
   }, []);
+
+  const filterByInput = (e) => {
+    const data = leaves.filter((leave) =>
+      leave.employeeId.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredLeaves(data);
+  };
+
+  const filterByButton = (status) => {
+    const data = leaves.filter((leave) =>
+      leave.status.toLowerCase().includes(status.toLowerCase())
+    );
+    setFilteredLeaves(data);
+  };
 
   return (
     <>
@@ -61,21 +77,35 @@ const LeaveTable = () => {
               type="text"
               placeholder="Search By Employee ID"
               className="px-4 py-0.5 border"
+              onChange={filterByInput}
             />
             <div className="flex space-x-3">
-              <button className="px-2 py-1 bg-teal-600 text-white hover:bg-teal-800">
+              <button
+                onClick={() => filterByButton("Pending")}
+                className="px-2 py-1 bg-teal-600 text-white hover:bg-teal-800"
+              >
                 Pending
               </button>
-              <button className="px-2 py-1 bg-green-600 text-white hover:bg-green-800">
+              <button
+                onClick={() => filterByButton("Approved")}
+                className="px-2 py-1 bg-green-600 text-white hover:bg-green-800"
+              >
                 Approved
               </button>
-              <button className="px-2 py-1 bg-red-600 text-white hover:bg-red-800">
+              <button
+                onClick={() => filterByButton("Rejected")}
+                className="px-2 py-1 bg-red-600 text-white hover:bg-red-800"
+              >
                 Rejected
               </button>
             </div>
           </div>
           <div className="mt-6">
-            <DataTable columns={columns} data={leaves} pagination />
+            {filteredLeaves.length > 0 ? (
+              <DataTable columns={columns} data={filteredLeaves} pagination />
+            ) : (
+              <div className="text-gray-500 text-center">No leaves found.</div>
+            )}
           </div>
         </div>
       )}

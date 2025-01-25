@@ -84,6 +84,11 @@ const App = () => {
             path="/admin-dashboard/leaves/:id"
             element={<LeaveDetails />}
           ></Route>
+          <Route
+            path="/admin-dashboard/employees/leaves/:id"
+            element={<LeaveList />}
+          ></Route>
+          <Route path="/admin-dashboard/setting" element={<Setting />}></Route>
         </Route>
 
         <Route
@@ -102,7 +107,7 @@ const App = () => {
             element={<ViewEmployee />}
           ></Route>
           <Route
-            path="/employee-dashboard/leaves"
+            path="/employee-dashboard/leaves/:id"
             element={<LeaveList />}
           ></Route>
           <Route

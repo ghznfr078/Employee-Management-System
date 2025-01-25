@@ -73,11 +73,15 @@ const AdminSidebar = () => {
           <span>Salary</span>
         </NavLink>
         <NavLink
-          to="/admin-dashboard"
-          className="flex items-center space-x-4 py-2.5 px-4 rounded"
+          to="/admin-dashboard/setting"
+          className={({ isActive }) =>
+            `${
+              isActive ? "bg-teal-600" : " "
+            } flex items-center space-x-4 py-2.5 px-4 rounded`
+          }
         >
           <FaCogs />
-          <span>Setting</span>
+          <span>Settings</span>
         </NavLink>
       </div>
     </div>
