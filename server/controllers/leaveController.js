@@ -21,12 +21,14 @@ const addLeave = async (req, res) => {
 }
 
 const getLeave = async (req, res) => {
-    const {id} = req.params
+    const {id, role} = req.params
+    
     try {
         let leaves;
-        leaves = await Leave.find({employeeId: id})
 
-        if(!leaves || leaves.length === 0) {
+        if(role === 'admin') {
+            leaves = await Leave.find({employeeId: id})
+        } else {
             const employee = await Employee.findOne({userId: id})
 
              leaves = await Leave.find({employeeId: employee._id})
@@ -73,7 +75,7 @@ const getLeaveDetail = async (req, res) => {
                 },
                 {
                     path: 'userId',
-                    select: 'name, profileImage'
+                    select: 'name profileImage'
                 }
             ]
         })

@@ -6,6 +6,7 @@ import employeeRouter from './routes/employeeRoutes.js'
 import salaryRouter from './routes/salaryRoutes.js'
 import leaveRouter from './routes/leaveRoutes.js'
 import settingRouter from './routes/settingRoutes.js'
+import dashboardRouter from './routes/dashboardRoutes.js'
 
 
 import connectToDb from './db/db.js'
@@ -26,6 +27,7 @@ app.use('/api/employee', employeeRouter)
 app.use('/api/salary', salaryRouter)
 app.use('/api/leave', leaveRouter)
 app.use('/api/setting', settingRouter)
+app.use('/api/dashboard', dashboardRouter)
 
 connectToDb()
 

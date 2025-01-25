@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export const fetchDepartments = async () => {
   let departments;
@@ -69,7 +70,7 @@ export const EmployeeButtons = ({ Id }) => {
 
       <button
         className="px-4 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-800"
-        onClick={() => navigate(`/admin-dashboard/employee/salary/${Id}`)}
+        onClick={() => navigate(`/admin-dashboard/employees/salary/${Id}`)}
       >
         Salary
       </button>

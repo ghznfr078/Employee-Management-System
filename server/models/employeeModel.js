@@ -24,7 +24,7 @@ const employeeSchema = new Schema({
         type: String
     },
     salary: {
-        type: String,
+        type: Number,
         required: true
     },
     department: {

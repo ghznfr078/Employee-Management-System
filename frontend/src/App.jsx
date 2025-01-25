@@ -73,7 +73,7 @@ const App = () => {
             element={<AddSalary />}
           ></Route>
           <Route
-            path="/admin-dashboard/employee/salary/:id"
+            path="/admin-dashboard/employees/salary/:id"
             element={<ViewSalary />}
           ></Route>
           <Route

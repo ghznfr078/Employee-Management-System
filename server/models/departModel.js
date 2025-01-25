@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import {Employee} from './employeeModel.js'
 import {Leave} from './leaveModel.js'
 import {Salary} from './salaryModel.js'
+import {User} from './userModel.js'
 
 const departSchema = new mongoose.Schema({
     dep_name: {type: String, required: true},
@@ -18,6 +19,8 @@ async function (next) {
         const empIds = employees.map(emp => emp._id)
 
         await Employee.deleteMany({department: this._id})
+
+        await User.deleteMany({employeeId: {$in: empIds}})
 
         await Leave.deleteMany({employeeId: {$in: empIds}})
 
