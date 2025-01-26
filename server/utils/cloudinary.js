@@ -1,33 +1,5 @@
-// import {v2 as cloudinary} from 'cloudinary'
-// import fs from 'fs'
-
-// cloudinary.config({ 
-//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-//     api_key: process.env.CLOUDINARY_API_KEY, 
-//     api_secret: process.env.CLOUDINARY_API_SECRET
-// });
-
-// const uploadOnCloudinary = async (localFilePath) => {
-//     try {
-//         if(!localFilePath) return null
-//         // upload the file
-//         const response = await cloudinary.uploader.upload(localFilePath, {
-//             resource_type: 'auto'
-//         })
-//         fs.unlinkSync(localFilePath)
-//         return response
-        
-//     } catch (error) {
-//         fs.unlinkSync(localFilePath) // remove the file
-//         return null
-//     }
-// }
-
-// export {uploadOnCloudinary}
-
-
-
 import { v2 as cloudinary } from 'cloudinary';
+import streamifier from 'streamifier';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -38,25 +10,28 @@ cloudinary.config({
 const uploadOnCloudinary = async (file) => {
     try {
         if (!file) return null;
-
-        // Upload the file buffer directly to Cloudinary
-        const response = await cloudinary.uploader.upload_stream(
-            { resource_type: 'auto' },
-            (error, result) => {
-                if (error) {
-                    console.error(error);
-                    return null;
+        
+        // Return a promise that resolves when the file is uploaded
+        return new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    resource_type: 'auto', // Automatically determine the file type (image, video, etc.)
+                },
+                (error, result) => {
+                    if (error) {
+                        reject('Cloudinary upload failed');
+                    } else {
+                        resolve(result); // Resolving with the upload result
+                    }
                 }
-                return result;
-            }
-        );
+            );
 
-        // Pipe the buffer from multer to Cloudinary
-        file.stream.pipe(response);
-
-        return response; // You can return this once Cloudinary finishes uploading
+            // Pipe the file buffer to Cloudinary
+            const bufferStream = streamifier.createReadStream(file.buffer);
+            bufferStream.pipe(uploadStream);
+        });
+        
     } catch (error) {
-        console.error(error);
         return null;
     }
 };
