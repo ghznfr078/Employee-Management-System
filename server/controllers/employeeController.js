@@ -4,6 +4,7 @@ import { User } from "../models/userModel.js"
 import {Department} from '../models/departModel.js'
 import bcrypt from 'bcrypt'
 import multer from 'multer'
+import { uploadOnCloudinary } from "../utils/cloudinary.js"
 
 
 const storage = multer.diskStorage({
@@ -41,11 +42,22 @@ const addEmployee = async (req, res) => {
         }
     
         const hashpassword = await bcrypt.hash(password, 10)
-    
+
+        const imageLocalPath = req.file.path
+
+        if(!imageLocalPath) {
+            return res.status(400).json({success: false, error: "image path not found"})
+        }
+
+        const image = await uploadOnCloudinary(imageLocalPath)
+
+        if(!image) {
+            return res.status(400).json({success: false, error: "image not uploaded"})
+        }
         const newUser = new User({
             name,
             email,
-            profileImage: req.file ? req.file.filename : "",
+            profileImage: image.url,
             password: hashpassword,
             role
         })

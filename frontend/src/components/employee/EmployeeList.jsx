@@ -18,6 +18,7 @@ const EmployeeList = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+
         if (response.data.success) {
           let sno = 1;
           const data = await response.data.employees.map((emp) => ({
@@ -30,7 +31,7 @@ const EmployeeList = () => {
               <img
                 width={40}
                 className="rounded-full"
-                src={`http://localhost:3000/${emp.userId.profileImage}`}
+                src={emp.userId.profileImage}
               />
             ),
             action: <EmployeeButtons Id={emp._id} />,

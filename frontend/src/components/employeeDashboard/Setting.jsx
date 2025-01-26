@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Setting = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth(); // Assuming user contains role information
   const [setting, setSetting] = useState({
     userId: user._id,
     oldPassword: "",
@@ -35,7 +35,12 @@ const Setting = () => {
           }
         );
         if (response.data.success) {
-          navigate("/employee-dashboard");
+          // Conditional navigation based on user role
+          if (user.role === "admin") {
+            navigate("/admin-dashboard");
+          } else if (user.role === "employee") {
+            navigate("/employee-dashboard");
+          }
           setError("");
         }
       } catch (error) {
@@ -45,6 +50,7 @@ const Setting = () => {
       }
     }
   };
+
   return (
     <div className="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md w-96">
       <h2 className="text-2xl font-bold mb-6">Change Password</h2>
