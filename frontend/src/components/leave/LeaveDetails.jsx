@@ -63,7 +63,7 @@ const LeaveDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <img
-                src={`https://employee-management-system-nine-nu.vercel.app/${leave.employeeId.userId.profileImage}`}
+                src={leave.employeeId.userId.profileImage}
                 className="rounded-full w-64 border-w-72"
                 alt=""
               />
