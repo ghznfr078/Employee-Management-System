@@ -6,17 +6,21 @@ import bcrypt from 'bcrypt'
 import multer from 'multer'
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 
+// Memory storage instead of disk storage
+const storage = multer.memoryStorage();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
-    }
-})
+const upload = multer({ storage: storage });
 
-const upload = multer({storage: storage})
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'public/uploads')
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + path.extname(file.originalname))
+//     }
+// })
+
+// const upload = multer({storage: storage})
 
 
 const addEmployee = async (req, res) => {
@@ -33,37 +37,39 @@ const addEmployee = async (req, res) => {
             salary,
             password,
             role
-        } = req.body
-    
-        const user = await User.findOne({email})
-    
-        if(user) {
-            return res.status(400).json({success: false, error: "user already registered in emp"})
-        }
-    
-        const hashpassword = await bcrypt.hash(password, 10)
+        } = req.body;
 
-        const imageLocalPath = req.file.path
+        const user = await User.findOne({ email });
 
-        if(!imageLocalPath) {
-            return res.status(400).json({success: false, error: "image path not found"})
+        if (user) {
+            return res.status(400).json({ success: false, error: "User already registered in emp" });
         }
 
-        const image = await uploadOnCloudinary(imageLocalPath)
+        const hashPassword = await bcrypt.hash(password, 10);
 
-        if(!image) {
-            return res.status(400).json({success: false, error: "image not uploaded"})
+        const file = req.file; // Get the file from the request
+
+        // Upload the file to Cloudinary
+        let profileImageUrl = '';
+        if (file) {
+            const cloudinaryResponse = await uploadOnCloudinary(file);
+            if (cloudinaryResponse) {
+                profileImageUrl = cloudinaryResponse.secure_url; // Save Cloudinary URL
+            } else {
+                return res.status(400).json({ success: false, error: 'Failed to upload image' });
+            }
         }
+
         const newUser = new User({
             name,
             email,
-            profileImage: image.url,
-            password: hashpassword,
+            profileImage: profileImageUrl,
+            password: hashPassword,
             role
-        })
-    
-        const savedUser = await newUser.save()
-    
+        });
+
+        const savedUser = await newUser.save();
+
         const newEmployee = new Employee({
             userId: savedUser._id,
             employeeId,
@@ -73,17 +79,17 @@ const addEmployee = async (req, res) => {
             designation,
             department,
             salary,
-        })
-        
-        
-    
-        const savedEmployee = await newEmployee.save()
+        });
 
-        return res.status(201).json({success: true, message: "employee created"})
+        const savedEmployee = await newEmployee.save();
+
+        return res.status(201).json({ success: true, message: "Employee created" });
     } catch (error) {
-        return res.status(500).json({success: false, message: "server error in adding employee"})
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Server error in adding employee" });
     }
-}
+};
+
 
 const getEmployees = async (req, res) => {
     try {
