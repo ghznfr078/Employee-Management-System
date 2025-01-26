@@ -15,7 +15,11 @@ import cookieParser from 'cookie-parser'
 const app = express()
 
 
-app.use(cors())
+
+app.use(cors({
+    origin: 'https://ems-two-self.vercel.app',
+    credentials: true
+}))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public/uploads'))

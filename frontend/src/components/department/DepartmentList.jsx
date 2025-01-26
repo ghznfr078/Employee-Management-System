@@ -16,11 +16,14 @@ const DepartmentList = () => {
   const fetchDepartments = async () => {
     setDepLoading(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/department", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        "https://employee-management-system-nine-nu.vercel.app/api/department",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       if (response.data.success) {
         let sno = 1;
         const data = await response.data.departments.map((dep) => ({

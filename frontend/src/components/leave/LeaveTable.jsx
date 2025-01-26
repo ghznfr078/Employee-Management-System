@@ -11,11 +11,14 @@ const LeaveTable = () => {
 
   const fetchLeaves = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/leave", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        "https://employee-management-system-nine-nu.vercel.app/api/leave",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       if (response.data.success) {
         let sno = 1;
         const data = response.data.leaves.map((leave) => ({

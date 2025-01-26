@@ -17,7 +17,7 @@ const AddLeave = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/leave/add",
+        "https://employee-management-system-nine-nu.vercel.app/api/leave/add",
         leave,
         {
           headers: {

@@ -11,7 +11,7 @@ const LeaveDetails = () => {
     const fetchLeave = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/leave/detail/${id}`,
+          `https://employee-management-system-nine-nu.vercel.app/api/leave/detail/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -35,7 +35,7 @@ const LeaveDetails = () => {
   const changeStatus = async (id, status) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/leave/${id}`,
+        `https://employee-management-system-nine-nu.vercel.app/api/leave/${id}`,
         { status },
         {
           headers: {
@@ -63,7 +63,7 @@ const LeaveDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <img
-                src={`http://localhost:3000/${leave.employeeId.userId.profileImage}`}
+                src={`https://employee-management-system-nine-nu.vercel.app/${leave.employeeId.userId.profileImage}`}
                 className="rounded-full w-64 border-w-72"
                 alt=""
               />
